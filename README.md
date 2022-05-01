@@ -17,3 +17,5 @@ Our paper on dead and living breast cancer cell image classification was placed 
 ![image](https://user-images.githubusercontent.com/91725761/163794416-6b2592f5-817d-4b33-8122-ef2db6b531ed.png)
 ![Patches segmentation](https://user-images.githubusercontent.com/91725761/163794193-8cb07bac-561d-46f3-b5e3-37f188d0c741.jpg)
 ![image](https://user-images.githubusercontent.com/91725761/163794383-653fb0d8-33d3-487f-b789-c07255b0838c.png)
+
+The image dataset and further resources are available in the public github repository:: https://github.com/emmanueliarussi/live-dead-JIMT-1.git
