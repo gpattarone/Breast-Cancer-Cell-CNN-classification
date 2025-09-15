@@ -1,1 +1,17 @@
+seed: 42
+data:
+  root: data
+  img_size: 64
+  batch_size: 16
+  num_workers: 2
+train:
+  epochs: 200
+  lr: 1e-3
+  weight_decay: 1e-4
+model:
+  name: resnet18
+  pretrained: false
+  dropout: 0.2
+paths:
+  out_dir: runs
 
