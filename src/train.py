@@ -17,38 +17,8 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from pathlib import Path
-from torch.utils.data import DataLoader
-from torchvision import datasets, transforms, models
-from sklearn.metrics import accuracy_score
 from src.models.cnn import build_resnet18
-
-# ---------------------------------------------------
-# Data transforms
-# ---------------------------------------------------
-
-def get_transforms(img_size=64):
-    train_tf = transforms.Compose([
-        transforms.Grayscale(),
-        transforms.Resize((img_size, img_size)),
-        transforms.RandomChoice([
-            transforms.RandomRotation((0, 0)),
-            transforms.RandomRotation((90, 90)),
-            transforms.RandomRotation((180, 180)),
-            transforms.RandomRotation((270, 270))
-        ]),
-        transforms.RandomHorizontalFlip(),
-        transforms.RandomVerticalFlip(),
-        transforms.ToTensor(),
-        transforms.Normalize((0.5,), (0.5,))
-    ])
-
-    val_tf = transforms.Compose([
-        transforms.Grayscale(),
-        transforms.Resize((img_size, img_size)),
-        transforms.ToTensor(),
-        transforms.Normalize((0.5,), (0.5,))
-    ])
-    return {"train": train_tf, "val": val_tf}
+from src.data import get_dataloaders
 
 
 # ---------------------------------------------------
@@ -120,30 +90,19 @@ def main(config_path="configs/default.yaml"):
     print(f"Using device: {device}")
 
     # Data
-    data_dir = Path(cfg["data"]["root"])
-    transforms_dict = get_transforms(cfg["data"]["img_size"])
-    image_datasets = {
-        x: datasets.ImageFolder(data_dir / x, transforms_dict[x])
-        for x in ["train", "val"]
-    }
-    dataloaders = {
-        x: DataLoader(image_datasets[x],
-                      batch_size=cfg["data"]["batch_size"],
-                      shuffle=True,
-                      num_workers=cfg["data"]["num_workers"],
-                      drop_last=True)
-        for x in ["train", "val"]
-    }
-    dataset_sizes = {x: len(image_datasets[x]) for x in ["train", "val"]}
-    class_names = image_datasets["train"].classes
+    dataloaders, dataset_sizes, class_names = get_dataloaders(
+        data_root=cfg["data"]["root"],
+        img_size=cfg["data"]["img_size"],
+        batch_size=cfg["data"]["batch_size"],
+        num_workers=cfg["data"]["num_workers"]
+    )
     print(f"Classes: {class_names}")
 
     # Model
-    model = models.resnet18(weights=None)  # from scratch
     model = build_resnet18(
-    num_classes=len(class_names),
-    pretrained=cfg["model"]["pretrained"],
-    dropout=cfg["model"]["dropout"]
+        num_classes=len(class_names),
+        pretrained=cfg["model"]["pretrained"],
+        dropout=cfg["model"]["dropout"]
     )
     model = model.to(device)
 
@@ -174,4 +133,3 @@ if __name__ == "__main__":
     parser.add_argument("--config", type=str, default="configs/default.yaml")
     args = parser.parse_args()
     main(args.config)
-
