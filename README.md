@@ -84,14 +84,28 @@ This will:
 
 ---
 
+Muy bien visto, Gi. Ahora que ya tenés `eval.py` funcionando, el README debería mostrarlo como **parte real del pipeline** y no como “coming soon”. Te dejo la sección **modificada** para reemplazar en tu `README.md`:
+
+---
+
 ## Evaluation
 
-An `eval.py` script provided to:
+Run the evaluation script on the test set:
 
-* Evaluate on the test set.
-* Generate metrics: accuracy, AUC, F1-score.
-* Plot confusion matrix and ROC curves.
+```bash
+python src/eval.py --config configs/default.yaml --checkpoint runs/best_model.pt
+```
 
+This will:
+
+* Load the trained model checkpoint (`runs/best_model.pt`).
+* Evaluate it on the **test dataset**.
+* Print metrics in the console: **accuracy, F1-score, ROC-AUC**.
+* Save plots in the `assets/` folder:
+
+  * `confusion_matrix.png`
+  * `roc_curve.png`
+    
 ---
 
 ## Model Card (summary)
@@ -109,10 +123,10 @@ If you use this code, please cite:
 
 ```
 @article{Pattarone2025BCC,
-  author  = {Gisela R. Pattarone},
-  title   = {Breast Cancer Cell Classification (Bright-field, Stain-free)},
-  year    = {2025},
-  journal = {GitHub Repository},
+  authors  = {Pattarone, G., Acion, L., Simian, M. et al},
+  title   = {Learning deep features for dead and living breast cancer cell classification without staining)},
+  year    = {2021},
+  journal = {Sci Rep 11, 10304 (2021). https://doi.org/10.1038/s41598-021-89895-w},
   url     = {https://github.com/gpattarone/Breast-Cancer-Cell-CNN-classification}
 }
 ```
