@@ -20,6 +20,7 @@ from pathlib import Path
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms, models
 from sklearn.metrics import accuracy_score
+from src.models.cnn import build_resnet18
 
 # ---------------------------------------------------
 # Data transforms
@@ -139,8 +140,11 @@ def main(config_path="configs/default.yaml"):
 
     # Model
     model = models.resnet18(weights=None)  # from scratch
-    in_feats = model.fc.in_features
-    model.fc = nn.Linear(in_feats, len(class_names))
+    model = build_resnet18(
+    num_classes=len(class_names),
+    pretrained=cfg["model"]["pretrained"],
+    dropout=cfg["model"]["dropout"]
+    )
     model = model.to(device)
 
     criterion = nn.CrossEntropyLoss()
